@@ -2,6 +2,9 @@
 #include "Puzzle.h"
 
 int main() {
+
+    /** Matrices de Prueba */
+
     int** m1 = new int*[3];
     m1[0] = new int[3] {1, 4, 0};
     m1[1] = new int[3] {3 , 7 , 2};
@@ -52,7 +55,10 @@ int main() {
     m10[1] = new int[3] {0, 7, 2};
     m10[2] = new int[3] {8, 3, 5};
 
-    /** Se prueban todos los casos anteriores*/
+
+
+    /** IDS */
+
     auto* a1 = new Puzzle(m1);
     auto* a2 = new Puzzle(m2);
     auto* a3 = new Puzzle(m3);
@@ -64,28 +70,71 @@ int main() {
     auto* a9 = new Puzzle(m9);
     auto* a10 = new Puzzle(m10);
 
-//    a3->executeBreadthFirst();
-//    delete a3;
+    a1->executeIDS();
+    a2->executeIDS();
     a3->executeIDS();
+    a4->executeIDS();
+    a5->executeIDS();
+    a6->executeIDS();
+    a7->executeIDS();
+    a8->executeIDS();
+    a9->executeIDS();
+    a10->executeIDS();
+
+    char a;
+    std::cin >> a;
+
+    delete a1;
+    delete a2;
     delete a3;
-//    a2->executeBreadthFirst();
-//    delete a2;
-//    a3->executeBreadthFirst();
-//    delete a3;
-//    a4->executeBreadthFirst();
-//    delete a4;
-//    a5->executeBreadthFirst();
-//    delete a5;
-//    a6->executeBreadthFirst();
-//    delete a6;
-//    a7->executeBreadthFirst();
-//    delete a7;
-//    a8->executeBreadthFirst();
-//    delete a8;
-//    a9->executeBreadthFirst();
-//    delete a9;
-//    a10->executeBreadthFirst();
-//    delete a10;
+    delete a4;
+    delete a5;
+    delete a6;
+    delete a7;
+    delete a8;
+    delete a9;
+    delete a10;
+
+
+    /** Ancho Primero */
+
+    a1 = new Puzzle(m1);
+    a2 = new Puzzle(m2);
+    a3 = new Puzzle(m3);
+    a4 = new Puzzle(m4);
+    a5 = new Puzzle(m5);
+    a6 = new Puzzle(m6);
+    a7 = new Puzzle(m7);
+    a8 = new Puzzle(m8);
+    a9 = new Puzzle(m9);
+    a10 = new Puzzle(m10);
+
+    a1->executeBreadthFirst();
+    a2->executeBreadthFirst();
+    a3->executeBreadthFirst();
+    a4->executeBreadthFirst();
+    a5->executeBreadthFirst();
+    a6->executeBreadthFirst();
+    a7->executeBreadthFirst();
+    a8->executeBreadthFirst();
+    a9->executeBreadthFirst();
+    a10->executeBreadthFirst();
+
+    char b;
+    std::cin >> b;
+
+    delete a1;
+    delete a2;
+    delete a3;
+    delete a4;
+    delete a5;
+    delete a6;
+    delete a7;
+    delete a8;
+    delete a9;
+    delete a10;
+
+
     return 0;
 }
 

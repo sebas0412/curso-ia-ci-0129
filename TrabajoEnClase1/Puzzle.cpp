@@ -20,14 +20,15 @@ Puzzle::~Puzzle() {
         delete[] this->solution[i];
     }
 
-    if (!this->queue->empty()) {
+
+    while (!this->queue->empty()) {
         int** temp = this->queue->front();
         this->queue->pop_front();
         deleteMatrix(temp);
     }
 
-    delete this->initialMatrix;
-    delete this->solution;
+    delete[] this->initialMatrix;
+    delete[] this->solution;
     delete this->queue;
 }
 
@@ -72,10 +73,11 @@ void Puzzle::executeBreadthFirst() {
 
         findZeroLocation(currentState, &zeroR, &zeroC);
         findAllNeighbourStates(currentState, &zeroR, &zeroC);
+        deleteMatrix(currentState);
     }
 
     printMatrix(currentState);
-    printf("Total de Iteraciones: %ld\n", this->breadthIterations);
+    printf("Ancho Primero: Total de Iteraciones necesitadas: %ld\n", this->breadthIterations);
 }
 
 void Puzzle::findZeroLocation(int **matrix, int *r, int *c) {
@@ -145,9 +147,9 @@ int **Puzzle::cloneMatrix(int **matrix) {
 
 void Puzzle::deleteMatrix(int **matrix) {
     for (int index = 0; index < MATRIX_SIZE; index++) {
-        delete matrix[index];
+        delete[] matrix[index];
     }
-    delete matrix;
+    delete[] matrix;
 }
 
 void Puzzle::swap(int *a, int *b) {
