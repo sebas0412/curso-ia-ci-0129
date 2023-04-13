@@ -9,4 +9,4 @@
 
 ### Gerardo Campos Badilla, B81506
 
-### Sebastian Chaves
+### Sebastian Chaves Vargas, B52067
