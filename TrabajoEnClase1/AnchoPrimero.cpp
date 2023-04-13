@@ -2,72 +2,143 @@
 // Created by gerardo on 30/03/23.
 //
 
-#include <cstdio>
 #include "AnchoPrimero.h"
 
-AnchoPrimero::AnchoPrimero() {
-    this->solutionMatrix = new int*[MATRIX_SIZE];
-    this->matrix = new int*[MATRIX_SIZE];
-    this->totalIterations = 0;
-
-    for (int i = 0; i < MATRIX_SIZE; i++) {
-        this->solutionMatrix[i] = new int[MATRIX_SIZE];
-        this->matrix[i] = new int [MATRIX_SIZE];
-    }
-
-    for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int column = 0; column < MATRIX_SIZE; column++) {
-            this->solutionMatrix[row][column] = (row * MATRIX_SIZE) + column;
-            this->matrix[row][column] = (row * MATRIX_SIZE) + column;
-        }
-    }
-}
-
 AnchoPrimero::AnchoPrimero(int **matrix) {
-    this->solutionMatrix = new int*[MATRIX_SIZE];
-    this->matrix = matrix;
-    this->totalIterations = 0;
+    this->initialMatrix = new int*[MATRIX_SIZE];
+    this->solution = new int*[MATRIX_SIZE];
+    this->queue = new std::deque<int**>();
 
     for (int i = 0; i < MATRIX_SIZE; i++) {
-        this->solutionMatrix[i] = new int[MATRIX_SIZE];
+        this->initialMatrix[i] = new int[MATRIX_SIZE];
+        this->solution[i] = new int [MATRIX_SIZE];
     }
 
     for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int column = 0; column < MATRIX_SIZE; column++) {
-            this->solutionMatrix[row][column] = (row * MATRIX_SIZE) + column;
+        for (int col = 0; col < MATRIX_SIZE; col++) {
+            this->solution[row][col] = row + col;
         }
     }
 }
 
 AnchoPrimero::~AnchoPrimero() {
     for (int i = 0; i < MATRIX_SIZE; i++) {
-        delete[] this->matrix[i];
-        delete[] this->solutionMatrix[i];
+        delete[] this->initialMatrix[i];
+        delete[] this->solution[i];
     }
-    delete this->matrix;
-    delete this->solutionMatrix;
+
+
+    delete this->initialMatrix;
+    delete this->solution;
+    delete this->queue;
 }
 
-int **AnchoPrimero::getMatrix() const {
-    return matrix;
-}
+bool AnchoPrimero::existsInQueue(int **matrix) {
+    int** tempMatrix;
 
-void AnchoPrimero::setMatrix(int **matrix) {
-    AnchoPrimero::matrix = matrix;
-}
+    if (!this->queue->empty()) {
+        for (auto & index : *this->queue) {
+            tempMatrix = index;
 
-bool AnchoPrimero::isSolved(int **matrix) {
-    bool isSolved = true;
-
-    for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int col = 0; col < MATRIX_SIZE; col++) {
-            if (this->matrix[row][col] != this->solutionMatrix[row][col]) {
-                isSolved = false;
-                return isSolved;
+            if (matricesAreEqual(matrix, tempMatrix)) {
+                return true;
             }
         }
     }
-    return isSolved;
+
+    return false;
+}
+
+bool AnchoPrimero::matricesAreEqual(int **matrixA, int **matrixB) {
+    for (int rows = 0; rows < MATRIX_SIZE; rows++) {
+        for (int cols = 0; cols < MATRIX_SIZE; cols++) {
+            if (matrixA[rows][cols] != matrixB[rows][cols]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void AnchoPrimero::execute() {
+    this->queue->push_back(this->initialMatrix);
+    int** currentState;
+    int zeroR, zeroC;
+
+    while (!matricesAreEqual(currentState = this->queue->front(), this->solution)) {
+        this->queue->pop_front();
+        this->iterationCounter++;
+
+        findZeroLocation(currentState, &zeroR, &zeroC);
+        findAllNeighbourStates(currentState, &zeroR, &zeroC);
+    }
+
+    printResults(currentState);
+}
+
+void AnchoPrimero::findZeroLocation(int **matrix, int *r, int *c) {
+    for (int row = 0; row < MATRIX_SIZE; row++) {
+        for (int col = 0; col < MATRIX_SIZE; col++) {
+            if (matrix[row][col] == 0) {
+                *r = row;
+                *c = col;
+                return;
+            }
+        }
+    }
+}
+
+
+void AnchoPrimero::findAllNeighbourStates(int **matrix, int *r, int *c) {
+    int** tempMatrix;
+
+    if (canMoveUp(r)) {
+        tempMatrix = cloneMatrix(matrix);
+        swap(&tempMatrix[*r][*c], &tempMatrix[*r - 1][*c]);
+        this->queue->push_back(tempMatrix);
+    }
+
+    if (canMoveDown(r)) {
+        tempMatrix = cloneMatrix(matrix);
+        swap(&tempMatrix[*r][*c], &tempMatrix[*r + 1][*c]);
+        this->queue->push_back(tempMatrix);
+    }
+
+    if (canMoveLeft(c)) {
+        tempMatrix = cloneMatrix(matrix);
+        swap(&tempMatrix[*r][*c], &tempMatrix[*r][*c - 1]);
+        this->queue->push_back(tempMatrix);
+    }
+
+    if (canMoveRight(c)) {
+        tempMatrix = cloneMatrix(matrix);
+        swap(&tempMatrix[*r][*c], &tempMatrix[*r][*c + 1]);
+        this->queue->push_back(tempMatrix);
+    }
+}
+
+int **AnchoPrimero::cloneMatrix(int **matrix) {
+    int** newMatrix = new int*[MATRIX_SIZE];
+
+    for (int index = 0; index < MATRIX_SIZE; index++) {
+        newMatrix[index] = new int[MATRIX_SIZE];
+    }
+
+    for (int row = 0; row < MATRIX_SIZE; row++) {
+        for (int col = 0; col < MATRIX_SIZE; col++) {
+            newMatrix[row][col] = matrix[row][col];
+        }
+    }
+
+    return newMatrix;
+}
+
+void AnchoPrimero::deleteMatrix(int **matrix) {
+    for (int index = 0; index < MATRIX_SIZE; index++) {
+        delete matrix[index];
+    }
+    delete matrix;
 }
 
 void AnchoPrimero::swap(int *a, int *b) {
@@ -76,120 +147,29 @@ void AnchoPrimero::swap(int *a, int *b) {
     *b = temp;
 }
 
-bool AnchoPrimero::solve(int currentRow, int currentCol, int currentDepth) {
-    this->totalIterations++;
-    printState();
-
-    if (isSolved(this->matrix)) {
-        return true;
-    } else if (currentDepth > MAX_DEPTH){
-        return false;
-    } else {
-        if (canMoveLeft(currentRow, currentCol)) {
-            if (solve(currentRow, currentCol - 1, currentDepth + 1)) {
-                return true;
-            } else {
-                canMoveRight(currentRow, currentCol);
-            }
-        }
-
-        if (canMoveUp(currentRow, currentCol)) {
-            if (solve(currentRow - 1, currentCol, currentDepth + 1)) {
-                return true;
-            } else {
-                canMoveDown(currentRow, currentCol);
-            }
-        }
-
-        if (canMoveRight(currentRow, currentCol)) {
-            if (solve(currentRow, currentCol + 1, currentDepth + 1)) {
-                return true;
-            } else {
-                canMoveLeft(currentRow, currentCol);
-            }
-        }
-
-        if (canMoveDown(currentRow, currentCol)) {
-            if (solve(currentRow + 1, currentCol, currentDepth + 1)) {
-                return true;
-            } else {
-                canMoveUp(currentRow, currentCol);
-            }
-        }
-    }
-
-    return false;
+bool AnchoPrimero::canMoveUp(const int *row) {
+    return *row > 0;
 }
 
-void AnchoPrimero::printState() {
-    for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int col = 0; col < MATRIX_SIZE; col++) {
-            printf("%d\t", this->matrix[row][col]);
+bool AnchoPrimero::canMoveDown(const int *row) {
+    return *row < MATRIX_SIZE - 1;
+}
+
+bool AnchoPrimero::canMoveLeft(const int *col) {
+    return *col > 0;
+}
+
+bool AnchoPrimero::canMoveRight(const int *col) {
+    return *col < MATRIX_SIZE - 1;
+}
+
+int AnchoPrimero::printResults(int **matrix) {
+    for (int rows = 0; rows < MATRIX_SIZE; ++rows) {
+        for (int cols = 0; cols < MATRIX_SIZE; ++cols) {
+            printf("%d\t", matrix[rows][cols]);
         }
         printf("\n");
     }
-    printf("\n");
+    printf("Iteraciones Totales: %ld", this->iterationCounter);
 }
 
-void AnchoPrimero::start() {
-    int location = 0;
-    int rowLocation;
-    int colLocation;
-
-    for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int col = 0; col < MATRIX_SIZE; col++) {
-            if (this->matrix[row][col] == 0) {
-                goto cycleExit;
-            } else {
-                location++;
-            }
-        }
-    }
-
-    cycleExit:
-    rowLocation = location / MATRIX_SIZE;
-    colLocation = location % MATRIX_SIZE;
-
-    solve(rowLocation, colLocation, 0);
-    printf("Iteraciones Totales: %ld", this->totalIterations);
-}
-
-bool AnchoPrimero::withinBoundaries(int currentRow, int currentCol) {
-    return (currentRow >= 0 && currentRow < MATRIX_SIZE && currentCol >= 0 && currentCol < MATRIX_SIZE);
-}
-
-bool AnchoPrimero::canMoveUp(int currentRow, int currentCol) {
-    if (withinBoundaries(currentRow - 1, currentCol)) {
-        swap(&matrix[currentRow][currentCol], &matrix[currentRow - 1][currentCol]);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool AnchoPrimero::canMoveDown(int currentRow, int currentCol) {
-    if (withinBoundaries(currentRow + 1, currentCol)) {
-        swap(&matrix[currentRow][currentCol], &matrix[currentRow + 1][currentCol]);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool AnchoPrimero::canMoveLeft(int currentRow, int currentCol) {
-    if (withinBoundaries(currentRow, currentCol - 1)) {
-        swap(&matrix[currentRow][currentCol], &matrix[currentRow][currentCol - 1]);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool AnchoPrimero::canMoveRight(int currentRow, int currentCol) {
-    if (withinBoundaries(currentRow, currentCol + 1)) {
-        swap(&matrix[currentRow][currentCol], &matrix[currentRow][currentCol + 1]);
-        return true;
-    } else {
-        return false;
-    }
-}
