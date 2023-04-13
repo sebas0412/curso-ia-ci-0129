@@ -31,7 +31,7 @@ private:
     static int** cloneMatrix(int** matrix);
     static void deleteMatrix(int** matrix);
     static void swap(int* a, int* b);
-    printResults(int** matrix);
+    void printMatrix(int** matrix);
 
 
     int** initialMatrix;

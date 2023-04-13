@@ -5,20 +5,13 @@
 #include "AnchoPrimero.h"
 
 AnchoPrimero::AnchoPrimero(int **matrix) {
-    this->initialMatrix = new int*[MATRIX_SIZE];
-    this->solution = new int*[MATRIX_SIZE];
+    this->initialMatrix = matrix;
     this->queue = new std::deque<int**>();
 
-    for (int i = 0; i < MATRIX_SIZE; i++) {
-        this->initialMatrix[i] = new int[MATRIX_SIZE];
-        this->solution[i] = new int [MATRIX_SIZE];
-    }
-
-    for (int row = 0; row < MATRIX_SIZE; row++) {
-        for (int col = 0; col < MATRIX_SIZE; col++) {
-            this->solution[row][col] = row + col;
-        }
-    }
+    this->solution = new int*[MATRIX_SIZE];
+    this->solution[0] = new int[3] {0, 1, 2};
+    this->solution[1] = new int[3] {3 ,4 ,5};
+    this->solution[2] = new int[3] {6 ,7 ,8};
 }
 
 AnchoPrimero::~AnchoPrimero() {
@@ -27,6 +20,11 @@ AnchoPrimero::~AnchoPrimero() {
         delete[] this->solution[i];
     }
 
+    if (!this->queue->empty()) {
+        int** temp = this->queue->front();
+        this->queue->pop_front();
+        deleteMatrix(temp);
+    }
 
     delete this->initialMatrix;
     delete this->solution;
@@ -66,6 +64,7 @@ void AnchoPrimero::execute() {
     int** currentState;
     int zeroR, zeroC;
 
+
     while (!matricesAreEqual(currentState = this->queue->front(), this->solution)) {
         this->queue->pop_front();
         this->iterationCounter++;
@@ -74,7 +73,8 @@ void AnchoPrimero::execute() {
         findAllNeighbourStates(currentState, &zeroR, &zeroC);
     }
 
-    printResults(currentState);
+    printMatrix(currentState);
+    printf("Total de Iteraciones: %ld\n", this->iterationCounter);
 }
 
 void AnchoPrimero::findZeroLocation(int **matrix, int *r, int *c) {
@@ -96,25 +96,33 @@ void AnchoPrimero::findAllNeighbourStates(int **matrix, int *r, int *c) {
     if (canMoveUp(r)) {
         tempMatrix = cloneMatrix(matrix);
         swap(&tempMatrix[*r][*c], &tempMatrix[*r - 1][*c]);
-        this->queue->push_back(tempMatrix);
+        if (!existsInQueue(tempMatrix)) {
+            this->queue->push_back(tempMatrix);
+        }
     }
 
     if (canMoveDown(r)) {
         tempMatrix = cloneMatrix(matrix);
         swap(&tempMatrix[*r][*c], &tempMatrix[*r + 1][*c]);
-        this->queue->push_back(tempMatrix);
+        if (!existsInQueue(tempMatrix)) {
+            this->queue->push_back(tempMatrix);
+        }
     }
 
     if (canMoveLeft(c)) {
         tempMatrix = cloneMatrix(matrix);
         swap(&tempMatrix[*r][*c], &tempMatrix[*r][*c - 1]);
-        this->queue->push_back(tempMatrix);
+        if (!existsInQueue(tempMatrix)) {
+            this->queue->push_back(tempMatrix);
+        }
     }
 
     if (canMoveRight(c)) {
         tempMatrix = cloneMatrix(matrix);
         swap(&tempMatrix[*r][*c], &tempMatrix[*r][*c + 1]);
-        this->queue->push_back(tempMatrix);
+        if (!existsInQueue(tempMatrix)) {
+            this->queue->push_back(tempMatrix);
+        }
     }
 }
 
@@ -163,13 +171,13 @@ bool AnchoPrimero::canMoveRight(const int *col) {
     return *col < MATRIX_SIZE - 1;
 }
 
-int AnchoPrimero::printResults(int **matrix) {
+void AnchoPrimero::printMatrix(int **matrix) {
     for (int rows = 0; rows < MATRIX_SIZE; ++rows) {
         for (int cols = 0; cols < MATRIX_SIZE; ++cols) {
             printf("%d\t", matrix[rows][cols]);
         }
         printf("\n");
     }
-    printf("Iteraciones Totales: %ld", this->iterationCounter);
+    printf("\n");
 }
 
