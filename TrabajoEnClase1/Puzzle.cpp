@@ -12,8 +12,6 @@ Puzzle::Puzzle(short **matrix) {
     this->solution[0] = new short[3] {0, 1, 2};
     this->solution[1] = new short[3] {3 ,4 ,5};
     this->solution[2] = new short[3] {6 ,7 ,8};
-    this->created = 0;
-    this->deleted = 0;
 }
 
 Puzzle::~Puzzle() {
