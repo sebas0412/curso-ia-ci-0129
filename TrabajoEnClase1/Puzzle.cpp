@@ -223,47 +223,42 @@ bool Puzzle::IDS(short **matrix, short currentDepth) {
     } else {
         short r, c;
         findZeroLocation(matrix, &r, &c);
-        short** tempMatrix;
         bool solved;
 
         if (canMoveUp(&r)) {
-            tempMatrix = cloneMatrix(matrix);
-            swap(&tempMatrix[r][c], &tempMatrix[r - 1][c]);
-            solved = IDS(tempMatrix, currentDepth + 1);
-            deleteMatrix(tempMatrix);
+            swap(&matrix[r][c], &matrix[r - 1][c]);
+            solved = IDS(matrix, currentDepth + 1);
             if (solved) {
                 return true;
             }
+            swap(&matrix[r][c], &matrix[r - 1][c]);
         }
 
         if (canMoveDown(&r)) {
-            tempMatrix = cloneMatrix(matrix);
-            swap(&tempMatrix[r][c], &tempMatrix[r + 1][c]);
-            solved = IDS(tempMatrix, currentDepth + 1);
-            deleteMatrix(tempMatrix);
+            swap(&matrix[r][c], &matrix[r + 1][c]);
+            solved = IDS(matrix, currentDepth + 1);
             if (solved) {
                 return true;
             }
+            swap(&matrix[r][c], &matrix[r + 1][c]);
         }
 
         if (canMoveLeft(&c)) {
-            tempMatrix = cloneMatrix(matrix);
-            swap(&tempMatrix[r][c], &tempMatrix[r][c - 1]);
-            solved = IDS(tempMatrix, currentDepth + 1);
-            deleteMatrix(tempMatrix);
+            swap(&matrix[r][c], &matrix[r][c - 1]);
+            solved = IDS(matrix, currentDepth + 1);
             if (solved) {
                 return true;
             }
+            swap(&matrix[r][c], &matrix[r][c - 1]);
         }
 
         if (canMoveRight(&c)) {
-            tempMatrix = cloneMatrix(matrix);
-            swap(&tempMatrix[r][c], &tempMatrix[r][c + 1]);
-            solved = IDS(tempMatrix, currentDepth + 1);
-            deleteMatrix(tempMatrix);
+            swap(&matrix[r][c], &matrix[r][c + 1]);
+            solved = IDS(matrix, currentDepth + 1);
             if (solved) {
                 return true;
             }
+            swap(&matrix[r][c], &matrix[r][c + 1]);
         }
     }
     return false;
