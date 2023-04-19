@@ -12,43 +12,45 @@
 
 class Puzzle{
 public:
-    Puzzle(int** matrix);
+    Puzzle(short** matrix);
     ~Puzzle();
     void executeBreadthFirst();
     void executeIDS();
 
 
 private:
-    bool existsInQueue(int** matrix);
-    bool matricesAreEqual(int** matrixA, int** matrixB);
-    void findZeroLocation(int** matrix, int* r, int* c);
-    void findAllNeighbourStates(int** matrix, int* r, int* c);
+    bool existsInQueue(short** matrix);
+    bool matricesAreEqual(short** matrixA, short** matrixB);
+    void findZeroLocation(short** matrix, short* r, short* c);
+    void findAllNeighbourStates(short** matrix, short* r, short* c);
 
-    static bool canMoveUp(const int* row);
-    static bool canMoveDown(const int* row);
-    static bool canMoveLeft(const int* col);
-    static bool canMoveRight(const int* col);
-
-
-    static int** cloneMatrix(int** matrix);
-    static void deleteMatrix(int** matrix);
-    static void swap(int* a, int* b);
-    void printMatrix(int** matrix);
-    bool IDS(int** matrix, int currentDepth);
+    bool canMoveUp(const short* row);
+    bool canMoveDown(const short* row);
+    bool canMoveLeft(const short* col);
+    bool canMoveRight(const short* col);
 
 
-    int** initialMatrix;
+    short** cloneMatrix(short** matrix);
+    void deleteMatrix(short** matrix);
+    void swap(short* a, short* b);
+    void printMatrix(short** matrix);
+    bool IDS(short** matrix, short currentDepth);
+
+
+    short** initialMatrix;
 public:
-    int **getInitialMatrix() const;
-    void setInitialMatrix(int **initialMatrix);
+    short **getInitialMatrix() const;
+    void setInitialMatrix(short **initialMatrix);
 
 private:
-    int** solution;
+    short** solution;
     unsigned long int breadthIterations;
     unsigned long int idsIterations;
     unsigned long int idsFinalDepth;
     unsigned long int searchDepth;
-    std::deque<int**>* queue;
+    std::deque<short**>* queue;
+    unsigned long int created;
+    unsigned long int deleted;
 };
 
 #endif //HEURISTICAIA_ANCHOPRIMERO_H
