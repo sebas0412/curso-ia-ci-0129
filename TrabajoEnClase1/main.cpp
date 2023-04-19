@@ -83,7 +83,27 @@ int main() {
     puzzleObject->setInitialMatrix(m10);
     puzzleObject->executeIDS();
 
-
+    /** Breadth First */
+    puzzleObject->setInitialMatrix(m1);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m2);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m3);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m4);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m5);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m6);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m7);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m8);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m9);
+    puzzleObject->executeBreadthFirst();
+    puzzleObject->setInitialMatrix(m10);
+    puzzleObject->executeBreadthFirst();
 
     delete puzzleObject;
 
