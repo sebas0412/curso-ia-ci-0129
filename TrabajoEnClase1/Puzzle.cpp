@@ -264,3 +264,32 @@ bool Puzzle::IDS(short **matrix, short currentDepth) {
     return false;
 }
 
+short Puzzle::countTilesOutOfPlace(short **matrix) {
+    short count = 0;
+
+    for (int rows = 0; rows < MATRIX_SIZE; ++rows) {
+        for (int cols = 0; cols < MATRIX_SIZE; ++cols) {
+            if (matrix[rows][cols] != this->solution[rows][cols]) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+short Puzzle::getSumOfAllDistances(short **matrix) {
+    short count = 0;
+
+    for (short rows = 0; rows < MATRIX_SIZE; ++rows) {
+        short rowDiff, colDiff;
+
+        for (short cols = 0; cols < MATRIX_SIZE; ++cols) {
+            rowDiff = abs(matrix[rows][cols] / MATRIX_SIZE - rows);
+            colDiff = abs(matrix[rows][cols] % MATRIX_SIZE - cols);
+            count += rowDiff + colDiff;
+        }
+    }
+
+    return count;
+}
+

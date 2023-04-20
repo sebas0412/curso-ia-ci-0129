@@ -63,7 +63,7 @@ int main() {
 
     /** IDS */
     puzzleObject->setInitialMatrix(m1);
-    puzzleObject->executeBreadthFirst();
+    puzzleObject->executeIDS();
     puzzleObject->setInitialMatrix(m2);
     puzzleObject->executeIDS();
     puzzleObject->setInitialMatrix(m3);

@@ -9,6 +9,7 @@
 #define MAX_DEPTH 25
 
 #include <queue>
+#include <cstdlib>
 
 class Puzzle{
 public:
@@ -16,6 +17,9 @@ public:
     ~Puzzle();
     void executeBreadthFirst();
     void executeIDS();
+
+    short **getInitialMatrix() const;
+    void setInitialMatrix(short **initialMatrix);
 
 
 private:
@@ -29,18 +33,17 @@ private:
     bool canMoveLeft(const short* col);
     bool canMoveRight(const short* col);
 
-
     short** cloneMatrix(short** matrix);
     void deleteMatrix(short** matrix);
     void swap(short* a, short* b);
     void printMatrix(short** matrix);
     bool IDS(short** matrix, short currentDepth);
 
+    short countTilesOutOfPlace(short** matrix);
+    short getSumOfAllDistances(short** matrix);
+
 
     short** initialMatrix;
-public:
-    short **getInitialMatrix() const;
-    void setInitialMatrix(short **initialMatrix);
 
 private:
     short** solution;
