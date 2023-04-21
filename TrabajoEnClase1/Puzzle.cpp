@@ -2,6 +2,7 @@
 // Created by gerardo on 30/03/23.
 //
 
+#include <string>
 #include "Puzzle.h"
 
 Puzzle::Puzzle(short **matrix) {
@@ -194,19 +195,20 @@ void Puzzle::setInitialMatrix(short **initialMatrix) {
     Puzzle::initialMatrix = initialMatrix;
 }
 
-void Puzzle::executeIDS() {
-    this->searchDepth = 0;
+void Puzzle::executeIDS(unsigned long int startingDepth = 0) {
+    this->searchDepth = startingDepth;
     this->idsIterations = 0;
     short r, c;
     short** tempMatrix = cloneMatrix(this->initialMatrix);
     findZeroLocation(tempMatrix, &r, &c);
+    std::string idsType = startingDepth == 0 ? "IDS" : "A-Star IDS";
 
     for (short index = 0; index < MAX_DEPTH; ++index) {
         if (IDS(tempMatrix, 0, r, c)) {
-            printf("IDS: Se encontro la solucion en %ld iteraciones y en una profundidad de %ld\n\n\n", this->idsIterations, this->idsFinalDepth);
+            printf("%s: Se encontro la solucion en %ld iteraciones y en una profundidad de %ld\n\n\n", idsType.c_str(), this->idsIterations, this->idsFinalDepth);
             return;
         } else {
-            printf("IDS: No se encontro la solucion en la profundidad de %ld\n", this->searchDepth);
+            printf("%s: No se encontro la solucion en la profundidad de %ld\n", idsType.c_str(), this->searchDepth);
             this->searchDepth++;
         }
     }
@@ -293,5 +295,63 @@ short Puzzle::getSumOfAllDistances(short **matrix) {
     }
 
     return count;
+}
+
+void Puzzle::executeAStarIDS() {
+    executeIDS(getSumOfAllDistances(this->initialMatrix));
+}
+
+void Puzzle::executeGreedySearch() {
+    this->breadthIterations = 0;
+    this->queue->push_back(cloneMatrix(this->initialMatrix));
+    short** currentState;
+    short zeroR, zeroC;
+    auto* costs = new short[4] {10, 10, 10, 10};
+    short min;
+
+
+    while (!matricesAreEqual(currentState = this->queue->front(), this->solution)) {
+        this->queue->pop_front();
+        this->breadthIterations++;
+
+
+        findZeroLocation(currentState, &zeroR, &zeroC);
+        evaluateAllNeighbourStates(currentState, &zeroR, &zeroC, costs);
+
+        min = costs[0];
+        for (int index = 1; index < 4; ++index) {
+            if (costs[index] < min) {
+                min = costs[index];
+            }
+        }
+
+        deleteMatrix(currentState);
+    }
+}
+
+void Puzzle::evaluateAllNeighbourStates(short **matrix, short *r, short *c, short *costs) {
+    if (canMoveUp(r)) {
+        swap(&matrix[*r][*c], &matrix[*r - 1][*c]);
+        costs[0] = countTilesOutOfPlace(matrix);
+        swap(&matrix[*r][*c], &matrix[*r - 1][*c]);
+    }
+
+    if (canMoveDown(r)) {
+        swap(&matrix[*r][*c], &matrix[*r + 1][*c]);
+        costs[1] = countTilesOutOfPlace(matrix);
+        swap(&matrix[*r][*c], &matrix[*r + 1][*c]);
+    }
+
+    if (canMoveLeft(c)) {
+        swap(&matrix[*r][*c], &matrix[*r][*c - 1]);
+        costs[2] = countTilesOutOfPlace(matrix);
+        swap(&matrix[*r][*c], &matrix[*r][*c - 1]);
+    }
+
+    if (canMoveRight(c)) {
+        swap(&matrix[*r][*c], &matrix[*r][*c + 1]);
+        costs[2] = countTilesOutOfPlace(matrix);
+        swap(&matrix[*r][*c], &matrix[*r][*c + 1]);
+    }
 }
 

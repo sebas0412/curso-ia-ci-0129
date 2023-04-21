@@ -63,25 +63,25 @@ int main() {
 
     /** IDS */
     puzzleObject->setInitialMatrix(m1);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m2);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m3);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m4);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m5);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m6);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m7);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m8);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m9);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
     puzzleObject->setInitialMatrix(m10);
-    puzzleObject->executeIDS();
+    puzzleObject->executeIDS(0);
 
     /** Breadth First */
     puzzleObject->setInitialMatrix(m1);
@@ -104,6 +104,30 @@ int main() {
     puzzleObject->executeBreadthFirst();
     puzzleObject->setInitialMatrix(m10);
     puzzleObject->executeBreadthFirst();
+
+    /** A-Star IDS */
+    puzzleObject->setInitialMatrix(m1);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m2);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m3);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m4);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m5);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m6);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m7);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m8);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m9);
+    puzzleObject->executeAStarIDS();
+    puzzleObject->setInitialMatrix(m10);
+    puzzleObject->executeAStarIDS();
+
+    /** Greedy Search */
 
     delete puzzleObject;
 

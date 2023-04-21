@@ -6,7 +6,7 @@
 #ifndef HEURISTICAIA_ANCHOPRIMERO_H
 #define HEURISTICAIA_ANCHOPRIMERO_H
 #define MATRIX_SIZE 3
-#define MAX_DEPTH 25
+#define MAX_DEPTH 24
 
 #include <queue>
 #include <cstdlib>
@@ -16,7 +16,9 @@ public:
     Puzzle(short** matrix);
     ~Puzzle();
     void executeBreadthFirst();
-    void executeIDS();
+    void executeIDS(unsigned long int startingDepth);
+    void executeAStarIDS();
+    void executeGreedySearch();
 
     short **getInitialMatrix() const;
     void setInitialMatrix(short **initialMatrix);
@@ -27,6 +29,7 @@ private:
     bool matricesAreEqual(short** matrixA, short** matrixB);
     void findZeroLocation(short** matrix, short* r, short* c);
     void findAllNeighbourStates(short** matrix, short* r, short* c);
+    void evaluateAllNeighbourStates(short **matrix, short *r, short *c, short *costs);
 
     bool canMoveUp(const short* row);
     bool canMoveDown(const short* row);
