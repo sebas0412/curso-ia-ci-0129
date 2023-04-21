@@ -128,6 +128,26 @@ int main() {
     puzzleObject->executeAStarIDS();
 
     /** Greedy Search */
+    puzzleObject->setInitialMatrix(m1);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m2);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m3);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m4);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m5);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m6);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m7);
+    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m8);
+    puzzleObject->executeGreedySearch();
+//    puzzleObject->setInitialMatrix(m9);
+//    puzzleObject->executeGreedySearch();
+    puzzleObject->setInitialMatrix(m10);
+    puzzleObject->executeGreedySearch();
 
     delete puzzleObject;
 

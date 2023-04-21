@@ -49,7 +49,7 @@ bool Puzzle::matricesAreEqual(short **matrixA, short **matrixB) {
 }
 
 void Puzzle::executeBreadthFirst() {
-    this->breadthIterations = 0;
+    this->iterations = 0;
     this->queue->push_back(cloneMatrix(this->initialMatrix));
     short** currentState;
     short zeroR, zeroC;
@@ -57,7 +57,7 @@ void Puzzle::executeBreadthFirst() {
 
     while (!matricesAreEqual(currentState = this->queue->front(), this->solution)) {
         this->queue->pop_front();
-        this->breadthIterations++;
+        this->iterations++;
 
         findZeroLocation(currentState, &zeroR, &zeroC);
         findAllNeighbourStates(currentState, &zeroR, &zeroC);
@@ -65,7 +65,7 @@ void Puzzle::executeBreadthFirst() {
     }
 
     printMatrix(currentState);
-    printf("Ancho Primero: Total de Iteraciones necesitadas: %ld\n", this->breadthIterations);
+    printf("Ancho Primero: Total de Iteraciones necesitadas: %ld\n", this->iterations);
     while (!this->queue->empty()) {
         short** temp = this->queue->front();
         this->queue->pop_front();
@@ -197,7 +197,7 @@ void Puzzle::setInitialMatrix(short **initialMatrix) {
 
 void Puzzle::executeIDS(unsigned long int startingDepth = 0) {
     this->searchDepth = startingDepth;
-    this->idsIterations = 0;
+    this->iterations = 0;
     short r, c;
     short** tempMatrix = cloneMatrix(this->initialMatrix);
     findZeroLocation(tempMatrix, &r, &c);
@@ -205,7 +205,7 @@ void Puzzle::executeIDS(unsigned long int startingDepth = 0) {
 
     for (short index = 0; index < MAX_DEPTH; ++index) {
         if (IDS(tempMatrix, 0, r, c)) {
-            printf("%s: Se encontro la solucion en %ld iteraciones y en una profundidad de %ld\n\n\n", idsType.c_str(), this->idsIterations, this->idsFinalDepth);
+            printf("%s: Se encontro la solucion en %ld iteraciones y en una profundidad de %ld\n\n\n", idsType.c_str(), this->iterations, this->idsFinalDepth);
             return;
         } else {
             printf("%s: No se encontro la solucion en la profundidad de %ld\n", idsType.c_str(), this->searchDepth);
@@ -217,7 +217,7 @@ void Puzzle::executeIDS(unsigned long int startingDepth = 0) {
 
 bool Puzzle::IDS(short **matrix, short currentDepth, short zeroR, short zeroC) {
     if (currentDepth == this->searchDepth) {
-        this->idsIterations++;
+        this->iterations++;
 
         if (matricesAreEqual(matrix, this->solution)) {
             printMatrix(matrix);
@@ -302,31 +302,49 @@ void Puzzle::executeAStarIDS() {
 }
 
 void Puzzle::executeGreedySearch() {
-    this->breadthIterations = 0;
-    this->queue->push_back(cloneMatrix(this->initialMatrix));
-    short** currentState;
+    this->iterations = 0;
+    short** currentState = cloneMatrix(this->initialMatrix);
     short zeroR, zeroC;
     auto* costs = new short[4] {10, 10, 10, 10};
+    short previousMin = 10;
     short min;
+    short minLocation;
 
-
-    while (!matricesAreEqual(currentState = this->queue->front(), this->solution)) {
-        this->queue->pop_front();
-        this->breadthIterations++;
-
+    while (!matricesAreEqual(currentState, this->solution)) {
+        costs[0] = 10;
+        costs[1] = 10;
+        costs[2] = 10;
+        costs[3] = 10;
+        this->iterations++;
 
         findZeroLocation(currentState, &zeroR, &zeroC);
         evaluateAllNeighbourStates(currentState, &zeroR, &zeroC, costs);
 
         min = costs[0];
-        for (int index = 1; index < 4; ++index) {
+        for (short index = 1; index < 4; ++index) {
             if (costs[index] < min) {
                 min = costs[index];
             }
         }
 
-        deleteMatrix(currentState);
+        if (min > previousMin) {
+            goto exit;
+        }
+
+        for (short index = 0; index < 4; ++index) {
+            if (costs[index] == min) {
+                minLocation = index;
+            }
+        }
+
+        executeMostOptimalState(minLocation, currentState, &zeroR, &zeroC);
+        previousMin = min;
     }
+    exit:
+    printMatrix(currentState);
+    printf("Se necesitaron %ld iteraciones para encontrar esta solucion\n", this->iterations);
+
+    deleteMatrix(currentState);
 }
 
 void Puzzle::evaluateAllNeighbourStates(short **matrix, short *r, short *c, short *costs) {
@@ -350,8 +368,27 @@ void Puzzle::evaluateAllNeighbourStates(short **matrix, short *r, short *c, shor
 
     if (canMoveRight(c)) {
         swap(&matrix[*r][*c], &matrix[*r][*c + 1]);
-        costs[2] = countTilesOutOfPlace(matrix);
+        costs[3] = countTilesOutOfPlace(matrix);
         swap(&matrix[*r][*c], &matrix[*r][*c + 1]);
+    }
+}
+
+void Puzzle::executeMostOptimalState(short state, short **matrix, short *zeroR, short *zeroC) {
+    switch (state) {
+        case 0:
+            swap(&matrix[*zeroR][*zeroC], &matrix[*zeroR - 1][*zeroC]);
+            break;
+        case 1:
+            swap(&matrix[*zeroR][*zeroC], &matrix[*zeroR + 1][*zeroC]);
+            break;
+        case 2:
+            swap(&matrix[*zeroR][*zeroC], &matrix[*zeroR][*zeroC - 1]);
+            break;
+        case 3:
+            swap(&matrix[*zeroR][*zeroC], &matrix[*zeroR][*zeroC + 1]);
+            break;
+        default:
+            break;
     }
 }
 

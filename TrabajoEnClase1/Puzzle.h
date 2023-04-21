@@ -44,14 +44,14 @@ private:
 
     short countTilesOutOfPlace(short** matrix);
     short getSumOfAllDistances(short** matrix);
+    void executeMostOptimalState(short state, short **matrix, short *zeroR, short *zeroC);
 
 
     short** initialMatrix;
 
 private:
     short** solution;
-    unsigned long int breadthIterations;
-    unsigned long int idsIterations;
+    unsigned long int iterations;
     unsigned long int idsFinalDepth;
     unsigned long int searchDepth;
     std::deque<short**>* queue;
