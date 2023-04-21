@@ -13,9 +13,9 @@ int main() {
     m1[2] = new short[3] {6 , 8 , 5};
 
     auto** m2 = new short*[3];
-    m2[0] = new short[3] {6, 5, 2};
-    m2[1] = new short[3] {7, 4, 3};
-    m2[2] = new short[3] {1, 8, 0};
+    m2[0] = new short[3] {1, 2, 3};
+    m2[1] = new short[3] {4, 6, 0};
+    m2[2] = new short[3] {7, 5, 8};
 
     auto** m3 = new short*[3];
     m3[0] = new short[3] {6, 3, 2};
@@ -24,13 +24,13 @@ int main() {
 
     auto** m4 = new short*[3];
     m4[0] = new short[3] {1, 3, 2};
-    m4[1] = new short[3] {0, 4, 6};
-    m4[2] = new short[3] {7, 8, 5};
+    m4[1] = new short[3] {4, 6, 5};
+    m4[2] = new short[3] {7, 8, 0};
 
     auto** m5 = new short*[3];
-    m5[0] = new short[3] {8, 1, 5};
-    m5[1] = new short[3] {3, 0, 2};
-    m5[2] = new short[3] {7, 6, 4};
+    m5[0] = new short[3] {1, 3, 5};
+    m5[1] = new short[3] {6, 2, 4};
+    m5[2] = new short[3] {0, 8, 7};
 
     auto** m6 = new short*[3];
     m6[0] = new short[3] {3, 0, 1};
@@ -48,9 +48,9 @@ int main() {
     m8[2] = new short[3] {7, 1, 6};
 
     auto** m9 = new short*[3];
-    m9[0] = new short[3] {8, 6, 1};
-    m9[1] = new short[3] {4, 5, 2};
-    m9[2] = new short[3] {3, 7, 0};
+    m9[0] = new short[3] {4, 1, 2};
+    m9[1] = new short[3] {6, 0, 8};
+    m9[2] = new short[3] {3, 5, 7};
 
     auto** m10 = new short*[3];
     m10[0] = new short[3] {1, 4, 6};

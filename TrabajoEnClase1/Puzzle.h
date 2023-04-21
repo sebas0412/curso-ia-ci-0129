@@ -37,7 +37,7 @@ private:
     void deleteMatrix(short** matrix);
     void swap(short* a, short* b);
     void printMatrix(short** matrix);
-    bool IDS(short** matrix, short currentDepth);
+    bool IDS(short **matrix, short currentDepth, short zeroR, short zeroC);
 
     short countTilesOutOfPlace(short** matrix);
     short getSumOfAllDistances(short** matrix);

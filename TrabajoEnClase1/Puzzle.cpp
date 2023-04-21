@@ -197,9 +197,12 @@ void Puzzle::setInitialMatrix(short **initialMatrix) {
 void Puzzle::executeIDS() {
     this->searchDepth = 0;
     this->idsIterations = 0;
+    short r, c;
+    short** tempMatrix = cloneMatrix(this->initialMatrix);
+    findZeroLocation(tempMatrix, &r, &c);
 
     for (short index = 0; index < MAX_DEPTH; ++index) {
-        if (IDS(this->initialMatrix, 0)) {
+        if (IDS(tempMatrix, 0, r, c)) {
             printf("IDS: Se encontro la solucion en %ld iteraciones y en una profundidad de %ld\n\n\n", this->idsIterations, this->idsFinalDepth);
             return;
         } else {
@@ -207,9 +210,10 @@ void Puzzle::executeIDS() {
             this->searchDepth++;
         }
     }
+    deleteMatrix(tempMatrix);
 }
 
-bool Puzzle::IDS(short **matrix, short currentDepth) {
+bool Puzzle::IDS(short **matrix, short currentDepth, short zeroR, short zeroC) {
     if (currentDepth == this->searchDepth) {
         this->idsIterations++;
 
@@ -221,44 +225,42 @@ bool Puzzle::IDS(short **matrix, short currentDepth) {
             return false;
         }
     } else {
-        short r, c;
-        findZeroLocation(matrix, &r, &c);
         bool solved;
 
-        if (canMoveUp(&r)) {
-            swap(&matrix[r][c], &matrix[r - 1][c]);
-            solved = IDS(matrix, currentDepth + 1);
+        if (canMoveUp(&zeroR)) {
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR - 1][zeroC]);
+            solved = IDS(matrix, currentDepth + 1, zeroR - 1, zeroC);
             if (solved) {
                 return true;
             }
-            swap(&matrix[r][c], &matrix[r - 1][c]);
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR - 1][zeroC]);
         }
 
-        if (canMoveDown(&r)) {
-            swap(&matrix[r][c], &matrix[r + 1][c]);
-            solved = IDS(matrix, currentDepth + 1);
+        if (canMoveDown(&zeroR)) {
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR + 1][zeroC]);
+            solved = IDS(matrix, currentDepth + 1, zeroR + 1, zeroC);
             if (solved) {
                 return true;
             }
-            swap(&matrix[r][c], &matrix[r + 1][c]);
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR + 1][zeroC]);
         }
 
-        if (canMoveLeft(&c)) {
-            swap(&matrix[r][c], &matrix[r][c - 1]);
-            solved = IDS(matrix, currentDepth + 1);
+        if (canMoveLeft(&zeroC)) {
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR][zeroC - 1]);
+            solved = IDS(matrix, currentDepth + 1, zeroR, zeroC - 1);
             if (solved) {
                 return true;
             }
-            swap(&matrix[r][c], &matrix[r][c - 1]);
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR][zeroC - 1]);
         }
 
-        if (canMoveRight(&c)) {
-            swap(&matrix[r][c], &matrix[r][c + 1]);
-            solved = IDS(matrix, currentDepth + 1);
+        if (canMoveRight(&zeroC)) {
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR][zeroC + 1]);
+            solved = IDS(matrix, currentDepth + 1, zeroR, zeroC + 1);
             if (solved) {
                 return true;
             }
-            swap(&matrix[r][c], &matrix[r][c + 1]);
+            swap(&matrix[zeroR][zeroC], &matrix[zeroR][zeroC + 1]);
         }
     }
     return false;
